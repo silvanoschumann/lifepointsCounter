@@ -1,12 +1,19 @@
 import { StatusBar } from "expo-status-bar";
 import { useState } from "react";
-import { Alert, Text, TextInput, TouchableOpacity, View } from "react-native";
+import {
+  Alert,
+  Image,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import styles from "../css/styles";
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "../components/types";
 import { GameParameter, Spieler } from "../components/model";
-import { spielModi } from "../components/constants";
+import { deckColors, spielModi } from "../components/constants";
 
 type HomeScreenNavigationProp = StackNavigationProp<RootStackParamList, "Home">;
 
@@ -140,13 +147,22 @@ export default function SelectionScreen() {
       )}
       <View>
         {spielerNamen.map((name, index) => (
-          <View key={index} style={{ marginBottom: 10 }}>
+          <View key={index} style={{ marginBottom: 10, flexDirection: "row" }}>
             <TextInput
               style={styles.input}
               placeholder={`Name von Spieler ${index + 1}`}
               value={name}
               onChangeText={(text) => handleNameChange(text, index)}
             />
+            {deckColors.map((color) => (
+              <View>
+                <Image
+                  style={styles.selectedDeckColorButton}
+                  source={color.path}
+                />
+                <TouchableOpacity />
+              </View>
+            ))}
           </View>
         ))}
       </View>

@@ -27,6 +27,12 @@ export default StyleSheet.create({
     borderRadius: 5,
     alignItems: "center",
   },
+  selectedDeckColorButton: {
+    width: 30,
+    height: 30,
+    right: 0,
+    bottom: -10
+  },
   buttonText: {
     fontSize: 20,
   },
