@@ -15,7 +15,7 @@ export default function SelectionScreen() {
   const [spielerAnzahl, setSpielerAnzahl] = useState(2);
   const [zeigeCommanderSpielerAnzahl, setZeigeCommanderSpielerAnzahl] =
     useState(false);
-  const [spielerNamen, setSpielerNamen] = useState<string[]>([]);
+  const [spielerNamen, setSpielerNamen] = useState<string[]>(["", ""]);
   const [spieler, setSpieler] = useState<Spieler[]>([]);
 
   const gameParameter: GameParameter = {

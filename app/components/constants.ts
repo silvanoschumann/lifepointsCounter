@@ -22,7 +22,7 @@ export const deckColors: DeckColors[]= [
   {
     name: "red",
     code: "#E95355",
-    brighterCode: "#FFA579",
+    brighterCode: "#FFC6A7",
     path: require("../image/DeckColorRed.png"),
   },
   {

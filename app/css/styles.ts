@@ -40,19 +40,34 @@ export default StyleSheet.create({
   },
   counterContainer: {
     flex: 1,
-    flexDirection: "column", // Buttons werden vertikal aufgeteilt
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  playerContainer: {
+    flex: 1,
+    flexDirection: "column",
+    justifyContent: "space-between",
+    alignItems: "center",
+    width:"100%",
   },
   counterButton: {
     justifyContent: "center",
     alignItems: "center",
     borderWidth: 1,
-    borderColor: "#000",
+    width:"100%",
+    borderColor: "transparent",
   },
   imagePosition: {
     position: 'absolute',
-    width: 300, 
-    height: 300,
-    right: -100,
-    bottom: -100,
+    width: 600, 
+    height: 600,
+    right: -250,
+    bottom: -250,
   },
+  playerPosition: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+  }
 });
