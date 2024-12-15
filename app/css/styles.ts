@@ -21,7 +21,7 @@ export default StyleSheet.create({
     alignItems: "center",
   },
   selectedButton: {
-    backgroundColor: deckColors.green,
+    backgroundColor: deckColors[0].code,
     padding: 10,
     marginHorizontal: 10,
     borderRadius: 5,
@@ -45,8 +45,14 @@ export default StyleSheet.create({
   counterButton: {
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: deckColors.black,
     borderWidth: 1,
     borderColor: "#000",
+  },
+  imagePosition: {
+    position: 'absolute',
+    width: 300, 
+    height: 300,
+    right: -100,
+    bottom: -100,
   },
 });

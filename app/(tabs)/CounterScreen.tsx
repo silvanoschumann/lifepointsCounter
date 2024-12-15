@@ -1,9 +1,10 @@
 import { RouteProp, useRoute } from "@react-navigation/native";
 import { StatusBar } from "expo-status-bar";
-import { Text, TouchableOpacity, View } from "react-native";
+import { Text, Image, TouchableOpacity, View } from "react-native";
 import { RootStackParamList } from "../components/types";
 import styles from "../css/styles";
 import { useEffect, useState } from "react";
+import { deckColors } from "../components/constants";
 
 type DetailScreenRouteProp = RouteProp<RootStackParamList, "Counter">;
 
@@ -39,9 +40,16 @@ export default function Counter() {
       {spielerNamen.map((spieler, index) => (
         <TouchableOpacity
           key={index}
-          style={[styles.counterButton, { flex: 1 / spielerNamen.length }]}
+          style={[
+            styles.counterButton,
+            {
+              flex: 1 / spielerNamen.length,
+              backgroundColor: deckColors[0].brighterCode,
+            },
+          ]}
           onPress={() => onPressDecrementLifePoints(index)}
         >
+          <Image style={styles.imagePosition} source={deckColors[0].path} />
           <Text style={styles.buttonText}>{lifePoints[index]}</Text>
           <Text style={styles.buttonText}>{spieler}</Text>
         </TouchableOpacity>
