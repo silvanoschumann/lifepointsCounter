@@ -6,89 +6,73 @@ import styles from "../css/styles";
 import React, { useEffect, useState } from "react";
 import { deckColors } from "../components/constants";
 import { FontAwesome } from "@expo/vector-icons";
+import { Spieler } from "../components/model";
 
 type DetailScreenRouteProp = RouteProp<RootStackParamList, "Counter">;
 
 export default function Counter() {
   const route = useRoute<DetailScreenRouteProp>();
   const { gameParameter } = route.params;
-  const initialLifePoints: number = gameParameter.lifePoints;
 
-  const [lifePoints, setLifePoints] = useState<number[]>([]);
-  const spielerNamen: string[] = gameParameter.spielerNamen;
+  const [alleSpieler, setAlleSpieler] = useState<Spieler[]>([]);
 
   useEffect(() => {
-    for (let index = 0; index < spielerNamen.length; index++) {
-      lifePoints.push(initialLifePoints);
-    }
-    setLifePoints(lifePoints);
+    setAlleSpieler(gameParameter.spieler);
   }, []);
 
   const onPressDecrementLifePoints = (index: number) => {
-    setLifePoints((prevState) => {
-      const updateLifePoints = [...prevState];
-      if (updateLifePoints[index] > 0) {
-        updateLifePoints[index] = updateLifePoints[index] - 1;
-      }
-
-      return updateLifePoints;
-    });
+    let updatedSpieler = [...alleSpieler];
+    updatedSpieler[index].lifePoints = updatedSpieler[index].lifePoints - 1;
+    setAlleSpieler(updatedSpieler);
   };
 
-  const onPressIncrementLifePoints = (index: number) => {
-    setLifePoints((prevState) => {
-      const updateLifePoints = [...prevState];
-      updateLifePoints[index] = updateLifePoints[index] + 1;
+  const onPressIncrementLifePoints = (spieler: Spieler, index: number) => {
+    const spielerCollection = [...alleSpieler];
+    let updatedSpieler = spieler;
+    updatedSpieler.lifePoints = spielerCollection[index].lifePoints + 1;
+    spielerCollection[index] = updatedSpieler;
 
-      return updateLifePoints;
-    });
+    console.log(updatedSpieler)
+    setAlleSpieler(spielerCollection);
   };
 
   return (
     <View style={styles.counterContainer}>
       <StatusBar style="auto" />
-      {spielerNamen.map((spieler, index) => (
+      {alleSpieler.map((spieler, index) => (
         <View
           key={index}
           style={[
             styles.playerContainer,
             {
-              backgroundColor: deckColors[4].brighterCode,
+              backgroundColor: deckColors.find(e => e.name === spieler.deckColor.find(deck => deck.selected === true)?.color)?.brighterCode,
             },
-          ]}
-        >
-          <Image
-            style={[styles.imagePosition, { flex: 0 }]}
-            source={deckColors[4].path}
-          />
+          ]}>
+
           <TouchableOpacity
-            style={[
-              styles.counterButton,
-              {
-                flex: 1,
-                backgroundColor: "transparent",
-              },
-            ]}
-            onPress={() => onPressIncrementLifePoints(index)}
-          >
-            <View style={styles.playerPosition}>
-              <Text style={styles.buttonText}>{lifePoints[index]}</Text>
-              <Text style={styles.buttonText}>{spieler}</Text>
-            </View>
+            style={styles.counterButton}
+            onPress={() => onPressIncrementLifePoints(spieler, index)}>
             <FontAwesome name="plus" size={40} color="white" />
           </TouchableOpacity>
+
           <TouchableOpacity
-            style={[
-              styles.counterButton,
-              {
-                flex: 1,
-                backgroundColor: "transparent",
-              },
-            ]}
-            onPress={() => onPressDecrementLifePoints(index)}
-          >
+            style={styles.counterButton}
+            onPress={() => onPressDecrementLifePoints(index)}>
             <FontAwesome name="minus" size={40} color="white" />
           </TouchableOpacity>
+
+          <View style={[styles.playerNamePosition, { backgroundColor: "blue" }]}>
+            <Text>{spieler.name}</Text>
+          </View>
+
+          <View style={styles.scoreContainer}>
+            <Text style={styles.scoreText}>{spieler.lifePoints}</Text>
+          </View>
+
+          <Image
+            style={styles.imagePosition}
+            source={deckColors.find(e => e.name === spieler.deckColor.find(deck => deck.selected === true)?.color)?.path}
+          />
         </View>
       ))}
     </View>

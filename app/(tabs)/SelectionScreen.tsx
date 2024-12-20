@@ -1,5 +1,5 @@
 import { StatusBar } from "expo-status-bar";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Alert,
   Image,
@@ -12,32 +12,55 @@ import styles from "../css/styles";
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "../components/types";
-import { GameParameter, Spieler } from "../components/model";
+import { Deck, GameParameter, Spieler } from "../components/model";
 import { deckColors, spielModi } from "../components/constants";
 
 type HomeScreenNavigationProp = StackNavigationProp<RootStackParamList, "Home">;
 
 export default function SelectionScreen() {
+  const DEFAULTSPIELERANZAHL: number = 2;
   const [spielModus, setSpielModus] = useState(spielModi[0]);
-  const [spielerAnzahl, setSpielerAnzahl] = useState(2);
   const [zeigeCommanderSpielerAnzahl, setZeigeCommanderSpielerAnzahl] =
     useState(false);
-  const [spielerNamen, setSpielerNamen] = useState<string[]>(["", ""]);
   const [spieler, setSpieler] = useState<Spieler[]>([]);
 
   const gameParameter: GameParameter = {
-    lifePoints: spielModus.lifePoints,
-    spielerNamen: spielerNamen,
     spieler: spieler,
   };
 
   const navigation = useNavigation<HomeScreenNavigationProp>();
 
+  useEffect(() => {
+    modifySpielerLength(DEFAULTSPIELERANZAHL);
+  }, [])
+
+  const createNewPlayer = (): Spieler => {
+    const newSpieler: Spieler = {
+      name: "",
+      lifePoints: spielModus.lifePoints,
+      deckColor: createDeckList()
+    }
+
+    return newSpieler;
+  };
+
+  const createDeckList = (): Deck[] => {
+    const alleDecks: Deck[] = [];
+    deckColors.forEach((color) => {
+      const deck: Deck = {
+        color: color.name,
+        selected: false
+      };
+      alleDecks.push(deck);
+    });
+
+    return alleDecks;
+  }
+
   const onPressStandard = () => {
     setSpielModus(spielModi[0]);
-    setSpielerAnzahl(2);
+    modifySpielerLength(DEFAULTSPIELERANZAHL);
     setZeigeCommanderSpielerAnzahl(false);
-    setSpielerNamen([spielerNamen[0], spielerNamen[1]]);
   };
 
   const onPressCommander = () => {
@@ -46,51 +69,61 @@ export default function SelectionScreen() {
   };
 
   const onPressTwoPlayer = () => {
-    setSpielerAnzahl(2);
-    setSpielerNamen([spielerNamen[0], spielerNamen[1]]);
+    modifySpielerLength(DEFAULTSPIELERANZAHL);
   };
 
   const onPressThreePlayer = () => {
-    setSpielerAnzahl(3);
-    setSpielerNamen([spielerNamen[0], spielerNamen[1], spielerNamen[2]]);
+    modifySpielerLength(3);
   };
 
   const onPressFourPlayer = () => {
-    setSpielerAnzahl(4);
-    setSpielerNamen([
-      spielerNamen[0],
-      spielerNamen[1],
-      spielerNamen[2],
-      spielerNamen[3],
-    ]);
+    modifySpielerLength(4);
   };
 
   const onPressFivePlayer = () => {
-    setSpielerAnzahl(5);
-    setSpielerNamen([
-      spielerNamen[0],
-      spielerNamen[1],
-      spielerNamen[2],
-      spielerNamen[3],
-      spielerNamen[4],
-    ]);
+    modifySpielerLength(5);
   };
 
-  const handleNameChange = (text: string, index: number) => {
-    const updatedNames = [...spielerNamen];
-    updatedNames[index] = text;
-    setSpielerNamen(updatedNames);
+  const modifySpielerLength = (expectedLength: number) => {
+    const newSpieler = spieler.slice(0, expectedLength);
+
+    while (newSpieler.length < expectedLength) {
+      newSpieler.push(createNewPlayer());
+    }
+
+    setSpieler(newSpieler);
+  }
+
+  const handleNameChange = (name: string, index: number) => {
+    const updatedNames = [...spieler];
+    updatedNames[index].name = name;
+    setSpieler(updatedNames);
   };
 
   const onPressCreateCounter = () => {
-    for (let index = 0; index < spielerAnzahl; index++) {
-      if (spielerNamen[index] === "" || spielerNamen[index] === undefined) {
+    for (let index = 0; index < spieler.length; index++) {
+      if (spieler[index].name === "" || spieler[index].name === undefined) {
         Alert.alert("Spieler " + (index + 1) + " hat keinen Namen");
+        console.log("debug hier")
         return;
       }
     }
+
     navigation.navigate("Counter", { gameParameter });
   };
+
+  const onPressIcon = (colorName: string, index: number) => {
+    setSpieler(prevSpieler => {
+      const newSpieler: Spieler[] = [...prevSpieler];
+      const updatedDeck: Deck = newSpieler[index].deckColor.find(e => e.color === colorName)!;
+
+      if (updatedDeck) {
+        updatedDeck.selected = !updatedDeck.selected;
+      }
+
+      return newSpieler;
+    })
+  }
 
   return (
     <View style={styles.container}>
@@ -99,46 +132,42 @@ export default function SelectionScreen() {
       <Text>Ausgewählter Spielmodus: {spielModus.name}</Text>
       <View style={styles.buttonContainer}>
         <TouchableOpacity
-          style={
-            spielModus === spielModi[0] ? styles.selectedButton : styles.button
-          }
-          onPress={onPressStandard}
-        >
+          style={spielModus === spielModi[0] ? styles.selectedButton : styles.button}
+          onPress={onPressStandard}>
           <Text style={styles.buttonText}>Standard</Text>
         </TouchableOpacity>
+
         <TouchableOpacity
-          style={
-            spielModus === spielModi[1] ? styles.selectedButton : styles.button
-          }
+          style={spielModus === spielModi[1] ? styles.selectedButton : styles.button}
           onPress={onPressCommander}
         >
           <Text style={styles.buttonText}>Commander</Text>
         </TouchableOpacity>
       </View>
 
-      <Text>Ausgewählter Spielanzahl: {spielerAnzahl}</Text>
+      <Text>Ausgewählter Spielanzahl: {spieler.length}</Text>
       {zeigeCommanderSpielerAnzahl && (
         <View style={styles.buttonContainer}>
           <TouchableOpacity
-            style={spielerAnzahl === 2 ? styles.selectedButton : styles.button}
+            style={spieler.length === 2 ? styles.selectedButton : styles.button}
             onPress={onPressTwoPlayer}
           >
             <Text style={styles.buttonText}>2</Text>
           </TouchableOpacity>
           <TouchableOpacity
-            style={spielerAnzahl === 3 ? styles.selectedButton : styles.button}
+            style={spieler.length === 3 ? styles.selectedButton : styles.button}
             onPress={onPressThreePlayer}
           >
             <Text style={styles.buttonText}>3</Text>
           </TouchableOpacity>
           <TouchableOpacity
-            style={spielerAnzahl === 4 ? styles.selectedButton : styles.button}
+            style={spieler.length === 4 ? styles.selectedButton : styles.button}
             onPress={onPressFourPlayer}
           >
             <Text style={styles.buttonText}>4</Text>
           </TouchableOpacity>
           <TouchableOpacity
-            style={spielerAnzahl === 5 ? styles.selectedButton : styles.button}
+            style={spieler.length === 5 ? styles.selectedButton : styles.button}
             onPress={onPressFivePlayer}
           >
             <Text style={styles.buttonText}>5</Text>
@@ -146,21 +175,22 @@ export default function SelectionScreen() {
         </View>
       )}
       <View>
-        {spielerNamen.map((name, index) => (
+        {spieler.map((spieler, index) => (
           <View key={index} style={{ marginBottom: 10, flexDirection: "row" }}>
             <TextInput
               style={styles.input}
               placeholder={`Name von Spieler ${index + 1}`}
-              value={name}
+              value={spieler.name}
               onChangeText={(text) => handleNameChange(text, index)}
             />
-            {deckColors.map((color) => (
+            {spieler.deckColor.map((deck) => (
               <View>
-                <Image
-                  style={styles.selectedDeckColorButton}
-                  source={color.path}
-                />
-                <TouchableOpacity />
+                <TouchableOpacity onPress={() => onPressIcon(deck.color, index)}>
+                  <Image
+                    style={styles.selectedDeckColorButton}
+                    source={deck.selected ? deckColors.find(e => e.name === deck.color)?.path : deckColors.find(e => e.name === deck.color)?.unselectedPath}
+                  />
+                </TouchableOpacity>
               </View>
             ))}
           </View>
