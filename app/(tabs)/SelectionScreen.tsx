@@ -1,5 +1,5 @@
 import { StatusBar } from "expo-status-bar";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Alert,
   Image,
@@ -9,7 +9,7 @@ import {
   View,
 } from "react-native";
 import styles from "../css/styles";
-import { useNavigation } from "@react-navigation/native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "../components/types";
 import { Deck, GameParameter, Spieler } from "../components/model";
@@ -30,16 +30,18 @@ export default function SelectionScreen() {
 
   const navigation = useNavigation<HomeScreenNavigationProp>();
 
-  useEffect(() => {
-    modifySpielerLength(DEFAULTSPIELERANZAHL);
-  }, [])
+  useFocusEffect(
+    React.useCallback(() => {
+      modifySpielerLength(DEFAULTSPIELERANZAHL);
+    }, [])
+  );
 
   const createNewPlayer = (): Spieler => {
     const newSpieler: Spieler = {
       name: "",
       lifePoints: spielModus.lifePoints,
-      deckColor: createDeckList()
-    }
+      deckColor: createDeckList(),
+    };
 
     return newSpieler;
   };
@@ -49,13 +51,13 @@ export default function SelectionScreen() {
     deckColors.forEach((color) => {
       const deck: Deck = {
         color: color.name,
-        selected: false
+        selected: false,
       };
       alleDecks.push(deck);
     });
 
     return alleDecks;
-  }
+  };
 
   const onPressStandard = () => {
     setSpielModus(spielModi[0]);
@@ -92,7 +94,7 @@ export default function SelectionScreen() {
     }
 
     setSpieler(newSpieler);
-  }
+  };
 
   const handleNameChange = (name: string, index: number) => {
     const updatedNames = [...spieler];
@@ -104,7 +106,7 @@ export default function SelectionScreen() {
     for (let index = 0; index < spieler.length; index++) {
       if (spieler[index].name === "" || spieler[index].name === undefined) {
         Alert.alert("Spieler " + (index + 1) + " hat keinen Namen");
-        console.log("debug hier")
+        console.log("debug hier");
         return;
       }
     }
@@ -113,17 +115,19 @@ export default function SelectionScreen() {
   };
 
   const onPressIcon = (colorName: string, index: number) => {
-    setSpieler(prevSpieler => {
+    setSpieler((prevSpieler) => {
       const newSpieler: Spieler[] = [...prevSpieler];
-      const updatedDeck: Deck = newSpieler[index].deckColor.find(e => e.color === colorName)!;
+      const updatedDeck: Deck = newSpieler[index].deckColor.find(
+        (e) => e.color === colorName
+      )!;
 
       if (updatedDeck) {
         updatedDeck.selected = !updatedDeck.selected;
       }
 
       return newSpieler;
-    })
-  }
+    });
+  };
 
   return (
     <View style={styles.container}>
@@ -132,13 +136,18 @@ export default function SelectionScreen() {
       <Text>Ausgewählter Spielmodus: {spielModus.name}</Text>
       <View style={styles.buttonContainer}>
         <TouchableOpacity
-          style={spielModus === spielModi[0] ? styles.selectedButton : styles.button}
-          onPress={onPressStandard}>
+          style={
+            spielModus === spielModi[0] ? styles.selectedButton : styles.button
+          }
+          onPress={onPressStandard}
+        >
           <Text style={styles.buttonText}>Standard</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
-          style={spielModus === spielModi[1] ? styles.selectedButton : styles.button}
+          style={
+            spielModus === spielModi[1] ? styles.selectedButton : styles.button
+          }
           onPress={onPressCommander}
         >
           <Text style={styles.buttonText}>Commander</Text>
@@ -183,12 +192,19 @@ export default function SelectionScreen() {
               value={spieler.name}
               onChangeText={(text) => handleNameChange(text, index)}
             />
-            {spieler.deckColor.map((deck) => (
-              <View>
-                <TouchableOpacity onPress={() => onPressIcon(deck.color, index)}>
+            {spieler.deckColor.map((deck, innerChild) => (
+              <View key={innerChild}>
+                <TouchableOpacity
+                  onPress={() => onPressIcon(deck.color, index)}
+                >
                   <Image
                     style={styles.selectedDeckColorButton}
-                    source={deck.selected ? deckColors.find(e => e.name === deck.color)?.path : deckColors.find(e => e.name === deck.color)?.unselectedPath}
+                    source={
+                      deck.selected
+                        ? deckColors.find((e) => e.name === deck.color)?.path
+                        : deckColors.find((e) => e.name === deck.color)
+                            ?.unselectedPath
+                    }
                   />
                 </TouchableOpacity>
               </View>

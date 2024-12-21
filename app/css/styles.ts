@@ -48,7 +48,6 @@ export default StyleSheet.create({
     flex: 1,
     flexDirection: "column",
     justifyContent: "center",
-    alignItems: "center",
   },
   playerContainer: {
     flex: 1,
@@ -81,17 +80,9 @@ export default StyleSheet.create({
     fontSize: 40,
     zIndex: -2,
   },
-  scoreContainer: {
-    position: 'absolute',
-    justifyContent: "center",
-    alignItems: "center",
-    width: '100%',
-    height: '100%',
-    textAlign: 'center',
-    zIndex: -1,
-  },
   scoreText: {
     fontSize: 40,
     color: 'white',
+    zIndex: -2,
   },
 });

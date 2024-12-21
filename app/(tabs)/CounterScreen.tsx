@@ -18,22 +18,32 @@ export default function Counter() {
 
   useEffect(() => {
     setAlleSpieler(gameParameter.spieler);
-  }, []);
+  }, [gameParameter]);
 
   const onPressDecrementLifePoints = (index: number) => {
-    let updatedSpieler = [...alleSpieler];
-    updatedSpieler[index].lifePoints = updatedSpieler[index].lifePoints - 1;
-    setAlleSpieler(updatedSpieler);
+    setAlleSpieler((prevState) =>
+      prevState.map((spieler, i) =>
+        i === index
+          ? {
+              ...spieler,
+              lifePoints: Math.max(0, spieler.lifePoints - 1),
+            }
+          : spieler
+      )
+    );
   };
 
-  const onPressIncrementLifePoints = (spieler: Spieler, index: number) => {
-    const spielerCollection = [...alleSpieler];
-    let updatedSpieler = spieler;
-    updatedSpieler.lifePoints = spielerCollection[index].lifePoints + 1;
-    spielerCollection[index] = updatedSpieler;
-
-    console.log(updatedSpieler)
-    setAlleSpieler(spielerCollection);
+  const onPressIncrementLifePoints = (index: number) => {
+    setAlleSpieler((prevState) =>
+      prevState.map((spieler, i) =>
+        i === index
+          ? {
+              ...spieler,
+              lifePoints: Math.max(0, spieler.lifePoints + 1),
+            }
+          : spieler
+      )
+    );
   };
 
   return (
@@ -45,33 +55,43 @@ export default function Counter() {
           style={[
             styles.playerContainer,
             {
-              backgroundColor: deckColors.find(e => e.name === spieler.deckColor.find(deck => deck.selected === true)?.color)?.brighterCode,
+              backgroundColor: deckColors.find(
+                (e) =>
+                  e.name ===
+                  spieler.deckColor.find((deck) => deck.selected === true)
+                    ?.color
+              )?.brighterCode,
             },
-          ]}>
-
+          ]}
+        >
           <TouchableOpacity
             style={styles.counterButton}
-            onPress={() => onPressIncrementLifePoints(spieler, index)}>
+            onPress={() => onPressIncrementLifePoints(index)}
+          >
             <FontAwesome name="plus" size={40} color="white" />
           </TouchableOpacity>
 
           <TouchableOpacity
             style={styles.counterButton}
-            onPress={() => onPressDecrementLifePoints(index)}>
+            onPress={() => onPressDecrementLifePoints(index)}
+          >
             <FontAwesome name="minus" size={40} color="white" />
           </TouchableOpacity>
 
-          <View style={[styles.playerNamePosition, { backgroundColor: "blue" }]}>
-            <Text>{spieler.name}</Text>
-          </View>
+          <Text style={styles.playerNamePosition}>{spieler.name}</Text>
 
-          <View style={styles.scoreContainer}>
-            <Text style={styles.scoreText}>{spieler.lifePoints}</Text>
-          </View>
+          <Text style={styles.scoreText}>{spieler.lifePoints}</Text>
 
           <Image
             style={styles.imagePosition}
-            source={deckColors.find(e => e.name === spieler.deckColor.find(deck => deck.selected === true)?.color)?.path}
+            source={
+              deckColors.find(
+                (e) =>
+                  e.name ===
+                  spieler.deckColor.find((deck) => deck.selected === true)
+                    ?.color
+              )?.path
+            }
           />
         </View>
       ))}
