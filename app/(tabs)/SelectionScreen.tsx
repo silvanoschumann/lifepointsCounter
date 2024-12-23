@@ -12,7 +12,7 @@ import styles from "../css/styles";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "../components/types";
-import { Deck, GameParameter, Spieler } from "../components/model";
+import { Deck, GameParameter, Spieler, SpielModus } from "../components/model";
 import { deckColors, spielModi } from "../components/constants";
 
 type HomeScreenNavigationProp = StackNavigationProp<RootStackParamList, "Home">;
@@ -32,7 +32,7 @@ export default function SelectionScreen() {
 
   useFocusEffect(
     React.useCallback(() => {
-      modifySpielerLength(DEFAULTSPIELERANZAHL);
+      modifySpielerLength(DEFAULTSPIELERANZAHL, spielModi[0]);
     }, [])
   );
 
@@ -61,12 +61,13 @@ export default function SelectionScreen() {
 
   const onPressStandard = () => {
     setSpielModus(spielModi[0]);
-    modifySpielerLength(DEFAULTSPIELERANZAHL);
+    modifySpielerLength(DEFAULTSPIELERANZAHL, spielModi[0]);
     setZeigeCommanderSpielerAnzahl(false);
   };
 
   const onPressCommander = () => {
     setSpielModus(spielModi[1]);
+    modifySpielerLength(DEFAULTSPIELERANZAHL);
     setZeigeCommanderSpielerAnzahl(true);
   };
 
@@ -86,14 +87,22 @@ export default function SelectionScreen() {
     modifySpielerLength(5);
   };
 
-  const modifySpielerLength = (expectedLength: number) => {
+  const modifySpielerLength = (
+    expectedLength: number,
+    spielFormat: SpielModus = spielModi[1]
+  ) => {
     const newSpieler = spieler.slice(0, expectedLength);
 
     while (newSpieler.length < expectedLength) {
       newSpieler.push(createNewPlayer());
     }
 
-    setSpieler(newSpieler);
+    const updatedSpieler = newSpieler.map((spieler) => ({
+      ...spieler,
+      lifePoints: spielFormat.lifePoints,
+    }));
+
+    setSpieler(updatedSpieler);
   };
 
   const handleNameChange = (name: string, index: number) => {

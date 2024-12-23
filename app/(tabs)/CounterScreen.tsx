@@ -83,7 +83,7 @@ export default function Counter() {
           <Text style={styles.scoreText}>{spieler.lifePoints}</Text>
 
           <Image
-            style={styles.imagePosition}
+            style={styles.image}
             source={
               deckColors.find(
                 (e) =>
