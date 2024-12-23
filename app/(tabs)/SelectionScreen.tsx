@@ -115,7 +115,6 @@ export default function SelectionScreen() {
     for (let index = 0; index < spieler.length; index++) {
       if (spieler[index].name === "" || spieler[index].name === undefined) {
         Alert.alert("Spieler " + (index + 1) + " hat keinen Namen");
-        console.log("debug hier");
         return;
       }
     }

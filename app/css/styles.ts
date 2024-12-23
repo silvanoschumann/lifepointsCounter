@@ -62,7 +62,7 @@ export default StyleSheet.create({
     width: "100%",
     flex: 1,
     backgroundColor: "transparent",
-    zIndex: 1,
+    zIndex: 2,
   },
   image: {
     position: 'absolute',
@@ -71,14 +71,14 @@ export default StyleSheet.create({
     height: '140%',
     width: '140%',
     resizeMode: 'cover',
-    zIndex: -3,
+    zIndex: 0,
   },
   playerNamePosition: {
     position: 'absolute',
     top: 10,
     left: 10,
     fontSize: 40,
-    zIndex: -2,
+    zIndex: 1,
   },
   scoreText: {
     fontSize: 40,
@@ -87,6 +87,6 @@ export default StyleSheet.create({
     top: '50%',
     left: '50%',
     transform: [{ translateX: '-50%' }, { translateY: '-50%' }],
-    zIndex: -2,
+    zIndex: 1,
   },
 });
