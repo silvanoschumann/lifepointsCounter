@@ -141,7 +141,6 @@ export default function SelectionScreen() {
     <View style={styles.container}>
       <StatusBar style="auto" />
 
-      <Text>Ausgewählter Spielmodus: {spielModus.name}</Text>
       <View style={styles.buttonContainer}>
         <TouchableOpacity
           style={
@@ -162,7 +161,6 @@ export default function SelectionScreen() {
         </TouchableOpacity>
       </View>
 
-      <Text>Ausgewählter Spielanzahl: {spieler.length}</Text>
       {zeigeCommanderSpielerAnzahl && (
         <View style={styles.buttonContainer}>
           <TouchableOpacity

@@ -55,6 +55,8 @@ export default StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     width: "100%",
+    position: "relative",
+    overflow: "hidden",
   },
   counterButton: {
     justifyContent: "center",
@@ -62,7 +64,7 @@ export default StyleSheet.create({
     width: "100%",
     flex: 1,
     backgroundColor: "transparent",
-    zIndex: 2,
+    zIndex: 20,
   },
   image: {
     position: 'absolute',
@@ -70,7 +72,6 @@ export default StyleSheet.create({
     top: 0,
     height: '140%',
     width: '140%',
-    resizeMode: 'cover',
     zIndex: 0,
   },
   playerNamePosition: {
@@ -78,15 +79,13 @@ export default StyleSheet.create({
     top: 10,
     left: 10,
     fontSize: 40,
-    zIndex: 1,
+    zIndex: 10,
   },
   scoreText: {
-    fontSize: 40,
-    color: 'white',
     position: 'absolute',
     top: '50%',
-    left: '50%',
-    transform: [{ translateX: '-50%' }, { translateY: '-50%' }],
-    zIndex: 1,
+    left: 10,
+    fontSize: 40,
+    zIndex: 10,
   },
 });

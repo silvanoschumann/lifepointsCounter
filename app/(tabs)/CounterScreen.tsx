@@ -46,6 +46,36 @@ export default function Counter() {
     );
   };
 
+  const getTransformStyle = (index: number) => {
+    const transforms = [];
+    if (alleSpieler.length === 2 && index === 0) {
+      transforms.push({ rotate: "180deg" });
+    }
+
+    if (alleSpieler.length === 3) {
+      if (index === 0) {
+        transforms.push({ rotate: "180deg" });
+      }
+      if (index === 1) {
+        transforms.push({ rotate: "-90deg" });
+      }
+      if (index === 2) {
+        transforms.push({ rotate: "0deg" });
+      }
+    }
+
+    if (alleSpieler.length === 4) {
+      if (index === 0) {
+        transforms.push({ rotate: "180deg" });
+      }
+      if (index === 1) {
+        transforms.push({ rotate: "180deg" });
+      }
+    }
+
+    return transforms;
+  };
+
   return (
     <View style={styles.counterContainer}>
       <StatusBar style="auto" />
@@ -61,6 +91,7 @@ export default function Counter() {
                   spieler.deckColor.find((deck) => deck.selected === true)
                     ?.color
               )?.brighterCode,
+              transform: getTransformStyle(index),
             },
           ]}
         >
