@@ -57,7 +57,7 @@ export default function Counter() {
         transforms.push({ rotate: "180deg" });
       }
       if (index === 1) {
-        transforms.push({ rotate: "-90deg" });
+        transforms.push({ rotate: "0deg" });
       }
       if (index === 2) {
         transforms.push({ rotate: "0deg" });
