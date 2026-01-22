@@ -33,7 +33,7 @@ export default function SelectionScreen() {
   useFocusEffect(
     React.useCallback(() => {
       modifySpielerLength(DEFAULTSPIELERANZAHL, spielModi[0]);
-    }, [])
+    }, []),
   );
 
   const createNewPlayer = (): Spieler => {
@@ -89,7 +89,7 @@ export default function SelectionScreen() {
 
   const modifySpielerLength = (
     expectedLength: number,
-    spielFormat: SpielModus = spielModi[1]
+    spielFormat: SpielModus = spielModi[1],
   ) => {
     const newSpieler = spieler.slice(0, expectedLength);
 
@@ -126,7 +126,7 @@ export default function SelectionScreen() {
     setSpieler((prevSpieler) => {
       const newSpieler: Spieler[] = [...prevSpieler];
       const updatedDeck: Deck = newSpieler[index].deckColor.find(
-        (e) => e.color === colorName
+        (e) => e.color === colorName,
       )!;
 
       if (updatedDeck) {
@@ -194,7 +194,7 @@ export default function SelectionScreen() {
           <View key={index} style={{ marginBottom: 10, flexDirection: "row" }}>
             <TextInput
               style={styles.input}
-              placeholder={`Name von Spieler ${index + 1}`}
+              placeholder={`Name des ${index + 1}. Magiers`}
               value={spieler.name}
               onChangeText={(text) => handleNameChange(text, index)}
             />
